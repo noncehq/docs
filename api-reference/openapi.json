@@ -1,217 +1,1035 @@
 {
   "openapi": "3.1.0",
-  "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
+  "paths": {
+    "/private-api/v1/{workspace_id}/farms": {
+      "get": {
+        "description": "Retrieve a paginated list of farms for the specified workspace",
+        "operationId": "GetFarms",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved farms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "Indicates if the request was successful"
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "Array of items",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "uuid_xxxxxx",
+                            "description": "Unique identifier for the farm"
+                          },
+                          "name": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "example": "Farm Name",
+                            "description": "Farm Name"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "example": "org_xxxxxxxxxxxxxxxxxx",
+                            "description": "Workspace identifier this farm belongs to"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "workspace_id"
+                        ]
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "description": "Pagination metadata",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "example": 50,
+                          "description": "Total number of items"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "example": 10,
+                          "description": "Maximum number of items per page"
+                        },
+                        "offset": {
+                          "type": "number",
+                          "example": 0,
+                          "description": "Number of items to skip"
+                        },
+                        "hasNext": {
+                          "type": "boolean",
+                          "example": true,
+                          "description": "Whether there are more items after this page"
+                        },
+                        "hasPrevious": {
+                          "type": "boolean",
+                          "example": false,
+                          "description": "Whether there are items before this page"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "limit",
+                        "offset",
+                        "hasNext",
+                        "hasPrevious"
+                      ]
+                    },
+                    "error": {
+                      "type": "null",
+                      "example": null,
+                      "description": "Error object (null on success)"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "pagination",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Invalid request parameters"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Bad Request"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Missing x-api-key header"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Unauthorized"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Valid API key but insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 403
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Access denied to workspace"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Forbidden"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "private-api-key": []
+          }
+        ],
+        "summary": "Get farms for workspace",
+        "tags": [
+          "PrivateApi"
+        ]
+      }
     },
-    "version": "1.0.0"
+    "/private-api/v1/{workspace_id}/farms/{farm_id}/miner/status": {
+      "get": {
+        "description": "Retrieve a paginated list of miner status for the specified farm",
+        "operationId": "GetMinerStatus",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "farm_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved miner status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "Indicates if the request was successful"
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "Array of items",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "id_xxxxxx",
+                            "description": "Miner Id"
+                          },
+                          "farm_id": {
+                            "type": "string",
+                            "example": "uuid_xxxxx",
+                            "description": "Farm Id"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "example": "org_xxxxxxxxxxxxxxxxxx",
+                            "description": "Workspace id"
+                          },
+                          "serial_number": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "description": "Serial number"
+                          },
+                          "model": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "example": "Antminer S19",
+                            "description": "Miner model"
+                          },
+                          "ip": {
+                            "type": "string",
+                            "example": "192.168.1.100",
+                            "description": "IP address"
+                          },
+                          "mac": {
+                            "type": "string",
+                            "example": "00:1B:44:11:3A:B7",
+                            "description": "MAC address"
+                          },
+                          "firmware_version": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "example": "1.0.0",
+                            "description": "Firmware version"
+                          },
+                          "is_mining": {
+                            "type": "boolean",
+                            "example": true,
+                            "description": "Whether the miner is actively mining"
+                          },
+                          "stale": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether the miner has stale data"
+                          },
+                          "overheat": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether the miner is overheating"
+                          },
+                          "low_hashrate": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether the miner has low hashrate"
+                          },
+                          "overpower": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether the miner is consuming too much power"
+                          },
+                          "underpower": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether the miner is consuming too little power"
+                          },
+                          "last_check_succeed": {
+                            "type": "boolean",
+                            "example": true,
+                            "description": "Whether the last health check succeeded"
+                          },
+                          "mining_mode": {
+                            "type": "string",
+                            "example": "normal",
+                            "description": "Mining mode. enum value ref to https://github.com/UpstreamData/pyasic/blob/master/pyasic/config/mining/__init__.py"
+                          },
+                          "hashrate": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 100120000000000,
+                            "description": "hashrate in TH/s"
+                          },
+                          "power": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 9771,
+                            "description": "Power consumption in watts"
+                          },
+                          "temp": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 75.5,
+                            "description": "Temperature in Celsius"
+                          },
+                          "efficiency": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 34,
+                            "description": "Power efficiency in J/TH"
+                          },
+                          "uptime": {
+                            "type": "number",
+                            "example": 86400,
+                            "description": "Uptime in seconds"
+                          },
+                          "last_updated_at": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "example": "2025-08-27T00:00:00Z",
+                            "description": "Timestamp of last update"
+                          },
+                          "errors": {
+                            "type": "array",
+                            "description": "Array of error objects",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "string",
+                                  "example": "E001",
+                                  "description": "Error code"
+                                },
+                                "message": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "example": "Temperature too high",
+                                  "description": "Error message"
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "message"
+                              ]
+                            }
+                          },
+                          "hashboards": {
+                            "type": "array",
+                            "description": "Array of hashboard objects",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "serial_number": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "example": "HB123456",
+                                  "description": "Hashboard serial number"
+                                },
+                                "hashrate": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ],
+                                  "example": 31.8,
+                                  "description": "Hashboard hashrate in TH/s"
+                                },
+                                "chips": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ],
+                                  "example": 126,
+                                  "description": "Number of chips on the hashboard"
+                                },
+                                "chip_frequency": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ],
+                                  "example": 650,
+                                  "description": "Chip frequency in MHz"
+                                }
+                              }
+                            }
+                          },
+                          "pool_url": {
+                            "type": "string",
+                            "example": "stratum+tcp://pool.example.com:4444",
+                            "description": "Mining pool URL"
+                          },
+                          "worker_id": {
+                            "type": "string",
+                            "example": "worker1.100x0x217",
+                            "description": "Worker ID for the mining pool"
+                          },
+                          "total_chips": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 378,
+                            "description": "Total number of chips"
+                          },
+                          "expected_chips": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 378,
+                            "description": "Expected number of chips"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "farm_id",
+                          "workspace_id",
+                          "ip",
+                          "mac",
+                          "is_mining",
+                          "stale",
+                          "overheat",
+                          "low_hashrate",
+                          "overpower",
+                          "underpower",
+                          "last_check_succeed",
+                          "mining_mode",
+                          "uptime",
+                          "errors",
+                          "hashboards"
+                        ]
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "description": "Pagination metadata",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "example": 50,
+                          "description": "Total number of items"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "example": 10,
+                          "description": "Maximum number of items per page"
+                        },
+                        "offset": {
+                          "type": "number",
+                          "example": 0,
+                          "description": "Number of items to skip"
+                        },
+                        "hasNext": {
+                          "type": "boolean",
+                          "example": true,
+                          "description": "Whether there are more items after this page"
+                        },
+                        "hasPrevious": {
+                          "type": "boolean",
+                          "example": false,
+                          "description": "Whether there are items before this page"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "limit",
+                        "offset",
+                        "hasNext",
+                        "hasPrevious"
+                      ]
+                    },
+                    "error": {
+                      "type": "null",
+                      "example": null,
+                      "description": "Error object (null on success)"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "pagination",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Invalid request parameters"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Bad Request"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Missing x-api-key header"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Unauthorized"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Valid API key but insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 403
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Access denied to workspace"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Forbidden"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "private-api-key": []
+          }
+        ],
+        "summary": "Get miner status for farm",
+        "tags": [
+          "PrivateApi"
+        ]
+      }
+    },
+    "/private-api/v1/{workspace_id}/farms/{farm_id}/miner/{miner_id}/performance-history": {
+      "get": {
+        "description": "Retrieve paginated performance history for the specified miner (maximum 7 days)",
+        "operationId": "GetMinerPerformanceHistory",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "farm_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "miner_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved miner performance history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "Indicates if the request was successful"
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "Array of items",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "uuid_xxxxxx",
+                            "description": "Unique identifier for the performance record"
+                          },
+                          "miner_id": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "example": "id_xxxxxx",
+                            "description": "Miner identifier"
+                          },
+                          "agent_id": {
+                            "type": "string",
+                            "example": "id_xxxxxx",
+                            "description": "Agent identifier"
+                          },
+                          "farm_id": {
+                            "type": "string",
+                            "example": "uuid_xxxxx",
+                            "description": "Farm identifier"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "example": "org_xxxxxxxxxxxxxxxxxx",
+                            "description": "Workspace identifier"
+                          },
+                          "period": {
+                            "type": "string",
+                            "example": "2025-08-27T00:00:00Z",
+                            "description": "Time period"
+                          },
+                          "hashrate": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 95.5,
+                            "description": "Hashrate in TH/s"
+                          },
+                          "power": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 3250,
+                            "description": "Power consumption in watts"
+                          },
+                          "temp": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "example": 75.5,
+                            "description": "Temperature in Celsius"
+                          },
+                          "pool_url": {
+                            "type": "string",
+                            "example": "stratum+tcp://pool.example.com:4444",
+                            "description": "Pool URL"
+                          },
+                          "worker_id": {
+                            "type": "string",
+                            "example": "worker.100x100x1",
+                            "description": "Worker ID/Name"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "agent_id",
+                          "farm_id",
+                          "workspace_id",
+                          "period"
+                        ]
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "description": "Pagination metadata",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "example": 50,
+                          "description": "Total number of items"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "example": 10,
+                          "description": "Maximum number of items per page"
+                        },
+                        "offset": {
+                          "type": "number",
+                          "example": 0,
+                          "description": "Number of items to skip"
+                        },
+                        "hasNext": {
+                          "type": "boolean",
+                          "example": true,
+                          "description": "Whether there are more items after this page"
+                        },
+                        "hasPrevious": {
+                          "type": "boolean",
+                          "example": false,
+                          "description": "Whether there are items before this page"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "limit",
+                        "offset",
+                        "hasNext",
+                        "hasPrevious"
+                      ]
+                    },
+                    "error": {
+                      "type": "null",
+                      "example": null,
+                      "description": "Error object (null on success)"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "pagination",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Invalid request parameters"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Bad Request"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Missing x-api-key header"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Unauthorized"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Valid API key but insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "description": "HTTP status code",
+                      "example": 403
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Access denied to workspace"
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error type",
+                      "example": "Forbidden"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "private-api-key": []
+          }
+        ],
+        "summary": "Get miner performance history",
+        "tags": [
+          "PrivateApi"
+        ]
+      }
+    }
   },
+  "info": {
+    "title": "Nonce Private API",
+    "description": "Nonce Private API documentation - Internal endpoints for system integration\n\nGenerated at: 2025-09-05T10:20:28.152Z\nGenerator: NestJS Swagger Module with nestjs-zod\nScope: Private API endpoints only (/private-api/*)\nDo not edit this file manually - it will be overwritten on next generation",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.nonce.app",
+      "description": "Production server"
     }
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
+  "components": {
+    "securitySchemes": {
+      "private-api-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Private API Key for authentication"
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
-      }
-    }
-  },
-  "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "SyncAssetStatusDto": {
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
+          "minerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "on_rack",
+              "off_rack",
+              "transit",
+              "maintenance",
+              "retired"
+            ]
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "locationId": {
+            "type": "string"
           }
+        },
+        "required": [
+          "minerIds",
+          "status"
         ]
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "BatchGetMinersDto": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
+          "minerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+        },
+        "required": [
+          "minerIds"
+        ]
       }
     }
-  }
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema"
 }
